@@ -1,0 +1,3 @@
+[submodule "docker/supabase"]
+	path = docker/supabase
+	url = https://github.com/supabase/supabase
