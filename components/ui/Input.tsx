@@ -1,6 +1,6 @@
-import { ComponentProps, FC, PropsWithChildren } from "react";
+import { ComponentProps, FC } from "react";
 
-const Input: FC<PropsWithChildren<ComponentProps<"input">>> = ({
+const Input: FC<ComponentProps<"input">> = ({
   className,
   type,
   ref,

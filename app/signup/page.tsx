@@ -7,16 +7,18 @@ import { authEmailPW } from "@/lib/auth/authentication";
 import { useRouter } from "next/navigation";
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 
-const Login = () => {
+const Signup = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    passwordConfirmation: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({
     email: "",
     password: "",
+    passwordConfirmation: "",
   });
   const router = useRouter();
 
@@ -35,7 +37,7 @@ const Login = () => {
 
   const validateForm = () => {
     let isValid = true;
-    const newError = { email: "", password: "" };
+    const newError = { email: "", password: "", passwordConfirmation: "" };
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -56,6 +58,16 @@ const Login = () => {
       isValid = false;
     }
 
+    // Password confirmation validation
+    if (!formData.passwordConfirmation) {
+      newError.passwordConfirmation = "Password confirmation is required";
+      isValid = false;
+    } else if (formData.passwordConfirmation != formData.password) {
+      newError.passwordConfirmation =
+        "Password confirmation must equal to password.";
+      isValid = false;
+    }
+
     setError(newError);
     return isValid;
   };
@@ -65,7 +77,7 @@ const Login = () => {
     if (validateForm()) {
       try {
         const user = await authEmailPW(
-          "LOGIN",
+          "SIGNUP",
           formData.email,
           formData.password,
         );
@@ -83,15 +95,15 @@ const Login = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Header */}
         <h2 className="text-center text-3xl font-bold text-neutral-900 dark:text-gray-100">
-          Sim-ads user sign in
+          Sim-ads user sign up
         </h2>
         <p className="mt-2 text-center text-sm text-neutral-800 dark:text-gray-200">
-          {"Doesn't have an account? "}
+          Already have an account?{" "}
           <a
-            href="/signup"
+            href="/login"
             className="font-medium text-blue-600 hover:text-blue-500"
           >
-            Sign up
+            Sign in
           </a>
         </p>
 
@@ -116,8 +128,8 @@ const Login = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className={`appearance-none bg-white dark:bg-black block w-full pl-10 pr-3 py-2 border ${
-                    error.email ? "border-red-500" : "border-gray-600"
+                  className={`appearance-none block bg-white dark:bg-black w-full pl-10 pr-3 py-2 border ${
+                    error.email ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm placeholder-gray-400 text-black dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                   placeholder="Enter your email"
                   value={formData.email}
@@ -147,8 +159,8 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   required
-                  className={`appearance-none bg-white dark:bg-black block w-full pl-10 pr-3 py-2 border ${
-                    error.email ? "border-red-500" : "border-gray-600"
+                  className={`appearance-none block bg-white dark:bg-black w-full pl-10 pr-10 py-2 border ${
+                    error.password ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm placeholder-gray-400 text-black dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                   placeholder="Create a password"
                   value={formData.password}
@@ -160,14 +172,60 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <Eyeoff className="h-5 w-5 text-gray-400" />
+                    <Eyeoff className="h-5 w-5 text-black dark:text-white" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
+                    <Eye className="h-5 w-5 text-black dark:text-white" />
                   )}
                 </button>
               </div>
               {error.password && (
                 <p className="mt-2 text-sm text-red-600">{error.password}</p>
+              )}
+            </div>
+
+            {/* Password confirmation field */}
+            <div>
+              <label
+                htmlFor="passwordConfirmation"
+                className="block text-sm font-medium text-black dark:text-white"
+              >
+                Password confirmation
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-black dark:text-white" />
+                </div>
+                <input
+                  id="passwordConfirmation"
+                  name="passwordConfirmation"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="password confirm"
+                  required
+                  className={`appearance-none block bg-white dark:bg-black w-full pl-10 pr-10 py-2 border ${
+                    error.passwordConfirmation
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-md shadow-sm placeholder-gray-400 text-black dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                  placeholder="Confirm a password"
+                  value={formData.passwordConfirmation}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <Eyeoff className="h-5 w-5 text-black dark:text-white" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-black dark:text-white" />
+                  )}
+                </button>
+              </div>
+              {error.passwordConfirmation && (
+                <p className="mt-2 text-sm text-red-600">
+                  {error.passwordConfirmation}
+                </p>
               )}
             </div>
 
@@ -177,7 +235,7 @@ const Login = () => {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Sign In
+                Sign Up
               </button>
             </div>
           </form>
@@ -187,4 +245,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

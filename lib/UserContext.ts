@@ -1,11 +1,13 @@
 import { createContext } from "react";
-import { Session } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 
-const UserContext = createContext<{
+export interface UserContextData {
   userLoaded: boolean;
-  user: Session | null;
+  user: User | null;
   signOut: () => Promise<void>;
-}>({
+}
+
+const UserContext = createContext<UserContextData>({
   userLoaded: false,
   user: null,
   signOut: async () => {},
