@@ -61,25 +61,25 @@ export type Database = {
     Tables: {
       ad_interactions: {
         Row: {
-          ad_id: number;
+          ad_id: number | null;
           id: number;
           status: Database["public"]["Enums"]["interaction_type"];
           timestamp: string;
-          user_id: string;
+          user_id: string | null;
         };
         Insert: {
-          ad_id: number;
+          ad_id?: number | null;
           id?: number;
           status?: Database["public"]["Enums"]["interaction_type"];
           timestamp?: string;
-          user_id: string;
+          user_id?: string | null;
         };
         Update: {
-          ad_id?: number;
+          ad_id?: number | null;
           id?: number;
           status?: Database["public"]["Enums"]["interaction_type"];
           timestamp?: string;
-          user_id?: string;
+          user_id?: string | null;
         };
         Relationships: [
           {
@@ -100,6 +100,7 @@ export type Database = {
         Row: {
           campaign_id: number;
           created_at: string;
+          created_by: string;
           description: string | null;
           id: number;
           image_url: string | null;
@@ -111,6 +112,7 @@ export type Database = {
         Insert: {
           campaign_id: number;
           created_at?: string;
+          created_by: string;
           description?: string | null;
           id?: number;
           image_url?: string | null;
@@ -122,6 +124,7 @@ export type Database = {
         Update: {
           campaign_id?: number;
           created_at?: string;
+          created_by?: string;
           description?: string | null;
           id?: number;
           image_url?: string | null;
@@ -137,31 +140,40 @@ export type Database = {
             referencedRelation: "campaigns";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "ads_created_by_fkey";
+            columns: ["created_by"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
         ];
       };
       advertisers: {
         Row: {
           created_at: string;
+          created_by: string;
+          description: string | null;
           id: number;
           name: string;
-          owner_id: string;
         };
         Insert: {
           created_at?: string;
+          created_by: string;
+          description?: string | null;
           id?: number;
           name: string;
-          owner_id: string;
         };
         Update: {
           created_at?: string;
+          created_by?: string;
+          description?: string | null;
           id?: number;
           name?: string;
-          owner_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "advertisers_owner_id_fkey";
-            columns: ["owner_id"];
+            foreignKeyName: "advertisers_created_by_fkey";
+            columns: ["created_by"];
             referencedRelation: "users";
             referencedColumns: ["id"];
           },
@@ -172,6 +184,7 @@ export type Database = {
           advertiser_id: number;
           budget: number;
           created_at: string;
+          created_by: string;
           end_date: string;
           id: number;
           name: string;
@@ -183,6 +196,7 @@ export type Database = {
           advertiser_id: number;
           budget: number;
           created_at?: string;
+          created_by: string;
           end_date: string;
           id?: number;
           name: string;
@@ -194,6 +208,7 @@ export type Database = {
           advertiser_id?: number;
           budget?: number;
           created_at?: string;
+          created_by?: string;
           end_date?: string;
           id?: number;
           name?: string;
@@ -206,6 +221,12 @@ export type Database = {
             foreignKeyName: "campaigns_advertiser_id_fkey";
             columns: ["advertiser_id"];
             referencedRelation: "advertisers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "campaigns_created_by_fkey";
+            columns: ["created_by"];
+            referencedRelation: "users";
             referencedColumns: ["id"];
           },
         ];
@@ -227,6 +248,34 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"];
         };
         Relationships: [];
+      };
+      user_advertisers: {
+        Row: {
+          advertiser_id: number;
+          user_id: string;
+        };
+        Insert: {
+          advertiser_id: number;
+          user_id: string;
+        };
+        Update: {
+          advertiser_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_advertisers_advertiser_id_fkey";
+            columns: ["advertiser_id"];
+            referencedRelation: "advertisers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_advertisers_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       user_roles: {
         Row: {
@@ -277,6 +326,13 @@ export type Database = {
         Args: {
           requested_permission: Database["public"]["Enums"]["app_permission"];
           user_id: string;
+        };
+        Returns: boolean;
+      };
+      is_user_authorized_for_advertiser: {
+        Args: {
+          user_id: string;
+          advertiser_id: number;
         };
         Returns: boolean;
       };
