@@ -1,10 +1,10 @@
 import { Database } from "../Database.types";
 import { supabase } from "../supabase";
 
-export async function addAdvertiser(
-  request: Database["public"]["Tables"]["advertisers"]["Insert"],
+export async function addWorkspaces(
+  request: Database["public"]["Tables"]["workspaces"]["Insert"],
 ) {
-  const { error } = await supabase.from("advertisers").insert([request]);
+  const { error } = await supabase.from("workspaces").insert([request]);
 
   if (error) {
     throw new Error("Error inserting advertiser: " + error.message);

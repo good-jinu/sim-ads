@@ -1,11 +1,14 @@
-import AdvertisersListPage from "./AdvertisersListPage";
+import WorkspacesProvider from "@/components/workspace/WorkspacesProvider";
 import HomeHeader from "./HomeHeader";
+import WorkspacesListPage from "./WorkspacesListPage";
 
 const RootPage = async () => {
   return (
     <main>
       <HomeHeader />
-      <AdvertisersListPage />
+      <WorkspacesProvider>
+        <WorkspacesListPage />
+      </WorkspacesProvider>
     </main>
   );
 };

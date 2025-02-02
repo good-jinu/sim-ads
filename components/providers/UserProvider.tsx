@@ -12,10 +12,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    function saveSession(
-      /** @type {Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']} */
-      session?: Session | null,
-    ) {
+    function saveSession(session?: Session | null) {
       const currentUser = session?.user;
       // if (session) {
       //   const jwt = jwtDecode(session.access_token);
@@ -24,7 +21,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       setUser(currentUser ?? null);
       setUserLoaded(!!currentUser);
 
-      if (["/login", "/signup"].includes(pathname)) {
+      if (pathname.startsWith("/login")) {
         return;
       }
 

@@ -148,40 +148,8 @@ export type Database = {
           },
         ];
       };
-      advertisers: {
-        Row: {
-          created_at: string;
-          created_by: string;
-          description: string | null;
-          id: number;
-          name: string;
-        };
-        Insert: {
-          created_at?: string;
-          created_by: string;
-          description?: string | null;
-          id?: number;
-          name: string;
-        };
-        Update: {
-          created_at?: string;
-          created_by?: string;
-          description?: string | null;
-          id?: number;
-          name?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "advertisers_created_by_fkey";
-            columns: ["created_by"];
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       campaigns: {
         Row: {
-          advertiser_id: number;
           budget: number;
           created_at: string;
           created_by: string;
@@ -191,9 +159,9 @@ export type Database = {
           start_date: string;
           status: Database["public"]["Enums"]["campaign_status"];
           updated_at: string;
+          workspace_id: string;
         };
         Insert: {
-          advertiser_id: number;
           budget: number;
           created_at?: string;
           created_by: string;
@@ -203,9 +171,9 @@ export type Database = {
           start_date: string;
           status?: Database["public"]["Enums"]["campaign_status"];
           updated_at?: string;
+          workspace_id: string;
         };
         Update: {
-          advertiser_id?: number;
           budget?: number;
           created_at?: string;
           created_by?: string;
@@ -215,18 +183,19 @@ export type Database = {
           start_date?: string;
           status?: Database["public"]["Enums"]["campaign_status"];
           updated_at?: string;
+          workspace_id?: string;
         };
         Relationships: [
-          {
-            foreignKeyName: "campaigns_advertiser_id_fkey";
-            columns: ["advertiser_id"];
-            referencedRelation: "advertisers";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "campaigns_created_by_fkey";
             columns: ["created_by"];
             referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "campaigns_workspace_id_fkey";
+            columns: ["workspace_id"];
+            referencedRelation: "workspaces";
             referencedColumns: ["id"];
           },
         ];
@@ -248,34 +217,6 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"];
         };
         Relationships: [];
-      };
-      user_advertisers: {
-        Row: {
-          advertiser_id: number;
-          user_id: string;
-        };
-        Insert: {
-          advertiser_id: number;
-          user_id: string;
-        };
-        Update: {
-          advertiser_id?: number;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "user_advertisers_advertiser_id_fkey";
-            columns: ["advertiser_id"];
-            referencedRelation: "advertisers";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "user_advertisers_user_id_fkey";
-            columns: ["user_id"];
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
       };
       user_roles: {
         Row: {
@@ -302,6 +243,34 @@ export type Database = {
           },
         ];
       };
+      user_workspaces: {
+        Row: {
+          user_id: string;
+          workspace_id: string;
+        };
+        Insert: {
+          user_id: string;
+          workspace_id: string;
+        };
+        Update: {
+          user_id?: string;
+          workspace_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_workspaces_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_workspaces_workspace_id_fkey";
+            columns: ["workspace_id"];
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       users: {
         Row: {
           id: string;
@@ -317,6 +286,37 @@ export type Database = {
         };
         Relationships: [];
       };
+      workspaces: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          description: string | null;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "workspaces_created_by_fkey";
+            columns: ["created_by"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -329,17 +329,17 @@ export type Database = {
         };
         Returns: boolean;
       };
-      is_user_authorized_for_advertiser: {
+      is_user_authorized_for_workspace: {
         Args: {
           user_id: string;
-          advertiser_id: number;
+          advertiser_id: string;
         };
         Returns: boolean;
       };
     };
     Enums: {
       ad_status: "active" | "paused" | "inactive";
-      app_permission: "advertisers.delete" | "campaigns.delete";
+      app_permission: "workspaces.delete" | "campaigns.delete";
       app_role: "admin" | "moderator" | "anonymous";
       campaign_status: "draft" | "active" | "paused" | "completed";
       interaction_type: "impression" | "click";

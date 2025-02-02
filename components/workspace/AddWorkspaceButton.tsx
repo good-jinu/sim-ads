@@ -7,11 +7,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/Popover";
-import { addAdvertiser } from "@/lib/advertiser/addAdvertiser";
 import UserContext from "@/lib/UserContext";
+import { addWorkspaces } from "@/lib/workspaces/addWorkspaces";
 import { FormEvent, useContext, useState } from "react";
 
-const AddAdvertiserButton = () => {
+const AddWorkspaceButton = (props: { onSuccess?: () => void }) => {
+  const { onSuccess = () => null } = props;
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -28,10 +29,10 @@ const AddAdvertiserButton = () => {
         description: formData.description,
         created_by: user.id,
       };
-      console.log(data);
 
       try {
-        await addAdvertiser(data);
+        await addWorkspaces(data);
+        onSuccess();
       } catch (error) {
         setErrorMessage((error as Error).message);
       }
@@ -90,4 +91,4 @@ const AddAdvertiserButton = () => {
   );
 };
 
-export default AddAdvertiserButton;
+export default AddWorkspaceButton;

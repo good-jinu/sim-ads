@@ -2,12 +2,12 @@
 import PaginationComposed from "@/components/ui/PaginationComposed";
 import { usePathname, useSearchParams } from "next/navigation";
 
-type AdvertisersListPaginationProps = {
+type WorkspacesListPaginationProps = {
   currentPage: number;
   totalPage: number;
 };
 
-const AdvertisersListPagination = (props: AdvertisersListPaginationProps) => {
+const WorkspacesListPagination = (props: WorkspacesListPaginationProps) => {
   const { currentPage, totalPage } = props;
 
   const searchParams = useSearchParams();
@@ -32,4 +32,4 @@ const AdvertisersListPagination = (props: AdvertisersListPaginationProps) => {
   );
 };
 
-export default AdvertisersListPagination;
+export default WorkspacesListPagination;
