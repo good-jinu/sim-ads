@@ -6,6 +6,7 @@ import Mail from "@/components/icons/Mail";
 import { authEmailPW } from "@/lib/auth/authentication";
 import { useRouter } from "next/navigation";
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import Link from "next/link";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -99,12 +100,12 @@ const Signup = () => {
         </h2>
         <p className="mt-2 text-center text-sm text-neutral-800 dark:text-gray-200">
           Already have an account?{" "}
-          <a
+          <Link
             href="/login"
             className="font-medium text-blue-600 hover:text-blue-500"
           >
             Sign in
-          </a>
+          </Link>
         </p>
 
         {/* Form */}

@@ -1,13 +1,16 @@
 import WorkspacesProvider from "@/components/workspace/WorkspacesProvider";
 import HomeHeader from "./HomeHeader";
 import WorkspacesListPage from "./WorkspacesListPage";
+import { Suspense } from "react";
 
 const RootPage = async () => {
   return (
     <main>
       <HomeHeader />
       <WorkspacesProvider>
-        <WorkspacesListPage />
+        <Suspense>
+          <WorkspacesListPage />
+        </Suspense>
       </WorkspacesProvider>
     </main>
   );
