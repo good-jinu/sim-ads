@@ -3,6 +3,9 @@
 # Set the working directory
 WORK_DIR=$(cd $(dirname $0) && pwd)
 
+git submodule init
+git submodule update
+
 # Check if the ./docker directory exists
 if [ ! -d "$WORK_DIR/supabase/docker" ]; then
   echo "The ./supabase/docker directory does not exist!"
