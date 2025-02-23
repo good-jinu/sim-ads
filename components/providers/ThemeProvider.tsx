@@ -1,6 +1,6 @@
 "use client";
 import { Theme, ThemeContext } from "@/lib/theme/ThemeContext";
-import "@/styles/style.scss";
+import "@/styles/style.css";
 import React, { ReactNode, useEffect, useState } from "react";
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
